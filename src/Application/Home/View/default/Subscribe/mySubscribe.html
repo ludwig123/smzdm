@@ -1,0 +1,74 @@
+<extend name="Base/common"/>
+<block name="header">
+	<header class="jumbotron subhead" id="overview">
+	
+		</script>
+
+		<div class="container">
+			<h2>剁手需谨慎</h2>
+			<p class="lead"></p>
+		</div>
+	</header>
+</block>
+
+<block name="body">
+	<div id="userInfo"> <p>欢迎你：{$name}</p>
+		<p>你的邮箱是：{$email}</p>
+		<p>如果有问题，请<a href="__ROOT__/index.php/Home/User/email/">立即修改</a></p>
+	</div>
+	<div id="list">
+		<script type="text/javascript">
+			$(document).ready(function() { 
+    // call the tablesorter plugin 
+    $("table").tablesorter({ 
+        // sort on the first column and third column, order asc 
+        sortList: [[0,0],[2,0]] 
+    }); 
+
+}); 
+		
+			$(document).ready(function() {
+				$("a.delBtn").click(function(event) {
+					var str = "__ROOT__/index.php/Home/Subscribe/remove/?keyword=";
+					str = str + event.target.title;
+					$.get(str);
+
+				});
+			});
+
+</script>
+
+
+
+<table cellspacing="1" class="tablesorter">             
+	<thead>
+		<tr> 
+			<th class="keyword">keyword</th> 
+			
+			<th>订阅时间</th> 
+			
+			<th>最近推送</th> 
+			
+		</tr> 
+	</thead> 
+
+	<tbody> 
+	<volist name="list" id="vo">
+	<tr>
+		<td>{$vo.keyword}</td>
+		
+		<td>{$vo.create_time}</td>
+		<td>{$vo.last_update_time}</td>
+		<td><a class="delBtn" title = {$vo.keyword} href="">删除</a></td>
+	</tr>
+</volist>
+		
+	</tbody> 
+</table>
+
+<form action="__ROOT__/index.php/Home/Subscribe/addKeyword/"></p>添加关键词：<input type="text" name="keyword"><strong> 
+	<input type="submit" value="添加"></form>
+</div>
+</block>
+
+

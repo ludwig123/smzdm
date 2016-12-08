@@ -1,0 +1,169 @@
+<extend name="Base/common"/>
+<block name="header">
+		<script type="text/javascript">
+	 $(document).ready(function(){
+	 	sort();
+	 });
+
+
+function sort(){
+
+	// initialize custom pager script BEFORE initializing tablesorter/tablesorter pager
+	// custom pager looks like this:
+	// 1 | 2 … 5 | 6 | 7 … 99 | 100
+	//   _       _   _        _     adjacentSpacer
+	//       _           _          distanceSpacer
+	// _____               ________ ends (2 default)
+	//         _________            aroundCurrent (1 default)
+
+	var $table = $('table'),
+		$pager = $('.pager');
+
+	$.tablesorter.customPagerControls({
+		table          : $table,                   // point at correct table (string or jQuery object)
+		pager          : $pager,                   // pager wrapper (string or jQuery object)
+		pageSize       : '.left a',                // container for page sizes
+		currentPage    : '.right a',               // container for page selectors
+		ends           : 2,                        // number of pages to show of either end
+		aroundCurrent  : 1,                        // number of pages surrounding the current page
+		link           : '<a href="#">{page}</a>', // page element; use {page} to include the page number
+		currentClass   : 'current',                // current page class name
+		adjacentSpacer : '<span> | </span>',       // spacer for page numbers next to each other
+		distanceSpacer : '<span> &#133; <span>',   // spacer for page numbers away from each other (ellipsis = &amp;#133;)
+		addKeyboard    : true,                     // use left,right,up,down,pageUp,pageDown,home, or end to change current page
+		pageKeyStep    : 10                        // page step to use for pageUp and pageDown
+	});
+
+	// initialize tablesorter & pager
+	$table
+		.tablesorter({
+			theme: 'blue',
+			widgets: ['zebra', 'columns', 'filter']
+			
+		})
+		.tablesorterPager({
+			// target the pager markup - see the HTML block below
+			container: $pager,
+			size: 10,
+			output: 'showing: {startRow} to {endRow} ({filteredRows})'
+		});
+
+}
+
+
+
+function search()
+{
+	var mall,body,result;
+	var getAddr;
+	var keyWord,mall;
+
+	keyWord = $("input#keyword").val();
+	mall = $("#mall").val();
+
+	getAddr = "index.php/Home/Search/searchAjax?keyword="+keyWord+"&mall="+mall;
+
+	$.get(getAddr, function(data){
+		$("div.result_body").remove();
+		$("div.pager.tablesorter-pager").remove();
+		result = '<div class="pager"><span class="pagedisplay"></span></div><div class="result_body"><table cellspacing="1" class="tablesorter" border="0" cellpadding="0" cellspacing="1">             <thead><tr><th>标题</th><th>价格</th>	<th>详情</th><th style="width: 15px; ">值</th> <th style="width: 15px; ">不值</th> <th style="width: 50px; ">商城</th> <th style="width: 70px; ">推送时间</th> </tr> </thead> <tfoot> <tr> <td colspan="7"> <div class="pager"> <span class="left"> # per page: <a href="#" class="current">10</a> | <a href="#">25</a> | <a href="#">50</a> | <a href="#">100</a> </span> <span class="right"> <span class="prev"> <img src="__STATIC__/tablesorter/addons/pager/icons/prev.png" /> Prev&nbsp; </span> <span class="pagecount"></span> &nbsp;<span class="next">Next <img src="__STATIC__/tablesorter/addons/pager/icons/next.png" /> </span> </span> </div> </td> </tr> </tfoot><tbody id="tbody">'+data[0]+'</tbody> </table> </div>';
+		$("div.result_head").parent().append(result);
+
+		$("select#mall").empty().html(data[1]);
+		$("#time_limit").remove();
+		sort();
+	});
+}
+
+function is_search(event){
+	var x = event.key;
+    if (x == "Enter") {
+    	search();
+    }
+}
+</script>
+	<header class="jumbotron subhead" id="overview">
+	
+
+		<div class="container">
+			<h2>剁手需谨慎</h2>
+			<p class="lead"></p>
+		</div>
+	</header>
+</block>
+
+<block name="body">
+	<div class="result_head">
+	<p id="time_limit" style="color: red;text-align: left">仅显示过去48小时内的推送</p>
+		<span>商品关键词：</span><input type="text" id="keyword" name = "keyword" onkeydown="is_search(event)">
+		<span>  商品来源：</span>
+		<select name="mall" id="mall" >
+		<option value="" selected></option>
+			<volist name="mall_list" id="vo" key="k">
+				<option value="{$vo}">{$vo}</option>
+			</volist>
+
+		</select>
+		<input type="button"  value="搜索" onclick="search()">
+	</div>
+
+<div class="pager">
+	<span class="pagedisplay"></span>
+</div>
+
+		<div class="result_body">
+			<table cellspacing="1" class="tablesorter" border="0" cellpadding="0" cellspacing="1">             
+				<thead>
+					<tr>
+						<th>标题</th>
+						<th>价格</th>		
+						<th>详情</th>
+						<th style="width: 15px; ">值</th>
+						<th style="width: 15px; ">不值</th>
+						<th style="width: 50px; ">商城</th>
+						<th style="width: 70px; ">推送时间</th>		
+					</tr> 
+				</thead> 
+
+	<tfoot>
+		<tr>
+			<td colspan="7">
+				<div class="pager"> <span class="left">
+					# per page:
+					<a href="#" class="current">10</a> |
+					<a href="#">25</a> |
+					<a href="#">50</a> |
+					<a href="#">100</a>
+				</span>
+				<span class="right">
+					<span class="prev">
+						<img src="__STATIC__/tablesorter/addons/pager/icons/prev.png" /> Prev&nbsp;
+					</span>
+					<span class="pagecount"></span>
+					&nbsp;<span class="next">Next
+						<img src="__STATIC__/tablesorter/addons/pager/icons/next.png" />
+					</span>
+				</span>
+				</div>
+			</td>
+		</tr>
+	</tfoot>
+
+				<tbody id="tbody">
+					<volist name="list" id="vo">
+						<tr>
+							<td><a href="{$vo.href}">{$vo.title}</a></td>
+							<td>{$vo.price}</td>
+							<td>{$vo.content}</td>
+							<td>{$vo.worthy}</td>
+							<td>{$vo.unworthy}</td>
+							<td><a href="{$vo.href}">{$vo.mall}</a></td>
+							<td>{$vo.post_time}</td>
+						</tr>
+					</volist>
+
+
+				</tbody> 
+			</table>
+		</div>
+</block>

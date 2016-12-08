@@ -1,0 +1,5 @@
+<?xml version="1.0" ?>
+<dataset>
+    <url id="1" url="http://www.baidu.com" />
+    <url id="2" url="http://www.baidux.com" />
+</dataset>

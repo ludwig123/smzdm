@@ -1,0 +1,94 @@
+<extend name="Base/common" />
+<block name="header">
+<header class="jumbotron subhead" id="overview">
+  <div class="container">
+    <h2>修改邮箱</h2>
+    <p><span><span class="pull-left"></span> </span></p>
+  </div>
+</header>
+</block>
+
+<block name="body">
+
+<section>
+	<div class="span12">
+        <form class="login-form" action="__SELF__" method="post">
+          <div class="control-group">
+            <label class="control-label" for="inputPassword">当前邮箱：{$email}</label>
+
+          </div>
+          <div class="control-group">
+            <label class="control-label" >新邮箱</label>
+            <div class="controls">
+              <input type="text" id="inputPassword"  class="span3" placeholder="请输入新邮箱"  errormsg="邮箱格式不正确" nullmsg="请填新邮箱" datatype="*6-20" name="password">
+            </div>
+          </div>
+          <div class="control-group">
+            <div class="controls">
+              <button type="submit" class="btn" onclick="presubmit()">提 交</button>
+            </div>
+          </div>
+        </form> 
+	</div>
+</section>
+</block>
+
+<block name="side"></block>
+<block name="script">
+	<script type="text/javascript">
+  function presubmit(){
+    var userinput;
+    userinput = document.getElementById("inputPassword").value;
+    if (userinput == null) {
+      alert('提示\n\n请输入有效的E_mail！');
+      return false;
+    }
+    var myreg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+           if(!myreg.test(userinput))
+            {
+                alert('提示\n\n请输入有效的E_mail！');
+                
+               return false;
+          }
+          else{
+
+            var str = "/smzdm/src/index.php/Home/User/change_email/?email=";
+          str = str + userinput;
+          alert('已经将邮箱修改为：'+userinput);
+          $.get(str);
+          location.href="/smzdm/src/index.php/Home/User/email/";
+
+          }
+        }
+
+    function update_email(){
+      
+    }
+
+  
+
+
+
+    	$(document)
+	    	.ajaxStart(function(){
+	    		$("button:submit").addClass("log-in").attr("disabled", true);
+	    	})
+	    	.ajaxStop(function(){
+	    		$("button:submit").removeClass("log-in").attr("disabled", false);
+	    	});
+
+    	$("form").submit(function(){
+    		var self = $(this);
+    		$.post(self.attr("action"), self.serialize(), success, "json");
+    		return false;
+
+    		function success(data){
+    			if(data.status){
+    				window.location.href = data.url;
+    			} else {
+    				self.find(".Validform_checktip").text(data.info);
+    			}
+    		}
+    	});
+	</script>
+</block>

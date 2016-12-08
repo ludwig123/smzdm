@@ -1,0 +1,6 @@
+<?xml version="1.0" ?>
+<dataset>
+    <url_channel url_id="1" url="http://www.baidu.com" title="channel 1" pid="0" />
+    <url_channel url_id="2" url="http://www.baidux.com" title="channel 2" pid="1" />
+</dataset>
+
